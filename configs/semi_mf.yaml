@@ -1,0 +1,49 @@
+defaults:
+  - model: base
+  - interpolant: flowmap_interpolant
+  - data: scope
+  - base_experiment
+  - _self_
+
+experiment:
+  num_devices: 4
+  training:
+    loss_p: 0.0
+    semigroup_loss_on_velocity: True
+    trans_scale: 0.1
+    translation_loss_weight: 2.0
+    rotation_loss_weight: 1.0
+    semigroup_loss_weight: 1.0
+    flow_matching_loss_weight: 1.0
+    use_pair_dist_loss: False
+    use_bb_loss: False
+    aux_loss_weight: 0.25
+    bb_atom_scale: 0.1
+    t_pass: 0.75
+    t_normalize_clip: 0.1
+    # Clipping values for the semigroup loss.
+    sg_s_clip: 0.1
+    sg_r_minus_t_clip: 1e-4
+    inference_sg_loss: False
+    inference_fm_loss: False
+    use_ema_on_sg_loss: False
+    only_fm: False
+
+    # Loss clamping options.
+    fm_loss_clamp: True
+    sg_loss_clamp: True
+
+  trainer:
+    check_val_every_n_epoch: 4
+    accumulate_grad_batches: 1
+    gradient_clip_val: 1000.0
+
+  use_ema: True
+  ema_decay: 0.9999
+  periodic_checkpoint: True
+
+  checkpointer:
+    monitor: valid_one_step/non_coil_percent
+
+  wandb:
+    name: semiMF_${data.task}_${data.dataset}

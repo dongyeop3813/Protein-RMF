@@ -1,0 +1,37 @@
+experiment:
+  debug: False
+  seed: 123
+  num_devices: 4
+  warm_start: null
+  warm_start_cfg_override: True
+
+  optimizer:
+    lr: 0.0001
+    weight_decay: 0.01
+
+  trainer:
+    overfit_batches: 0
+    min_epochs: 1 # prevents early stopping
+    max_epochs: 1000
+    accelerator: gpu
+    log_every_n_steps: 1
+    deterministic: False
+    strategy: ddp
+    check_val_every_n_epoch: 4
+    accumulate_grad_batches: 1
+    gradient_clip_val: 1.0
+
+  checkpointer:
+    dirpath: ckpt/${experiment.wandb.project}/${experiment.wandb.name}/${now:%Y-%m-%d}_${now:%H-%M-%S}
+    save_last: True
+    save_top_k: 3
+    monitor: valid/non_coil_percent
+    mode: max
+
+  wandb:
+    name: semiMF_${data.task}_${data.dataset}
+    project: se3-SemiMF-full
+    entity: protein-RMF
+
+  # Keep this null. Will be populated at runtime.
+  inference_dir: null

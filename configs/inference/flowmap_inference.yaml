@@ -1,0 +1,58 @@
+
+# Path to the Lightning checkpoint that will be loaded at runtime.
+ckpt_path: null
+
+# Module to instantiate for inference. Supported values:
+#   - meanflow: MeanFlowModule
+#   - splitmf: SplitMeanFlowModule
+module_type: splitmf
+#module_type: meanflow
+
+seed: 123
+
+# Base directory where samples will be written 
+output_dir: null
+
+n_steps: 10
+do_integration: false
+do_ddim: false
+
+# Reward guidance settings
+# Set do_reward_guidance to true to enable reward-guided sampling
+do_reward_guidance: true
+#guidance_scale: 10000
+#guidance_scale: 0.5
+guidance_scale: 1
+#guidance_scale_trans: 10000
+#guidance_scale_rot: 10000
+setting: rX1
+#scale_grad_by_t: true
+
+# Reward function configuration
+# Supported reward types: "alpha_helix", "beta_sheet", "combined"
+reward_config:
+  reward_type: "dense"  # Options: "alpha_helix", "beta_sheet", "combined", "dense"
+  use_grad_safe: true      # Use gradient-safe versions to avoid NaN
+  # Weights for combined reward (only used when reward_type is "combined")
+  # Final score = alpha_weight * alpha_helix_reward + beta_weight * beta_sheet_reward
+  alpha_weight: 1.0
+  beta_weight: 0.0
+
+self_condition: false
+save_trans_rot: false
+
+rot_schedule: constant
+rot_schedule_rate: 10.0
+
+samples:
+  min_length: 128
+  max_length: 128
+  length_step: 1
+  samples_per_length: 1
+  total_batches: 100
+
+ddim:
+  trans_gamma: 1.0
+  rot_gamma: 1.0
+  time_steps: uniform
+  last_step: true

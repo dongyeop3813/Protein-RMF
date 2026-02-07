@@ -1,0 +1,52 @@
+
+# Path to the Lightning checkpoint that will be loaded at runtime.
+ckpt_path: "/network/scratch/m/marta.skreta/meanflows/IPA_best_models/IPA_best_model_M_L1/epoch_epoch=0999.ckpt"
+
+# Module to instantiate for inference. Supported values:
+#   - meanflow: MeanFlowModule
+#   - splitmf: SplitMeanFlowModule
+module_type: splitmf
+#module_type: meanflow
+
+seed: 123
+
+# Base directory where samples will be written 
+# (default: ckpt_dir/epoch_{epoch}).
+output_dir: ./protein_generations/IPA_best_model_M_L1/secondary_struct
+
+n_steps: 10
+do_integration: false
+do_ddim: false
+
+# Reward guidance settings
+# Set do_reward_guidance to true to enable reward-guided sampling
+do_reward_guidance: true
+guidance_scale: 1000
+setting: rX1
+scale_grad_by_t: false
+
+# Reward function configuration
+reward_config:
+  reward_type: "secondary_struct"  # reward_type: "secondary_struct" or "motif_rmsd" 
+  use_grad_safe: true      # Use gradient-safe versions to avoid NaN
+  alpha_weight: 0.0
+  beta_weight: 1.0 # alpha_weight and beta_weight are target fractions of ss in [0, 1]
+
+self_condition: false
+save_trans_rot: false
+
+rot_schedule: constant
+rot_schedule_rate: 10.0
+
+samples:
+  min_length: 100
+  max_length: 100
+  length_step: 1
+  samples_per_length: 1
+  total_batches: 100
+
+ddim:
+  trans_gamma: 1.0
+  rot_gamma: 1.0
+  time_steps: uniform
+  last_step: true

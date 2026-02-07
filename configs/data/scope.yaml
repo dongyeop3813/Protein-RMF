@@ -1,0 +1,21 @@
+# @package _global_
+
+defaults:
+  - datasets
+  - _self_
+
+data:
+  # Available tasks: hallucination, inpainting
+  task: hallucination
+
+  # Available tasks: pdb, scope
+  dataset: scope
+
+  loader:
+    num_workers: 4
+    prefetch_factor: 10
+
+  sampler:
+    # Setting for 48GB GPUs
+    max_batch_size: 80
+    max_num_res_squared: 100_000

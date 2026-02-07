@@ -1,0 +1,38 @@
+prior_type: uniform
+
+flow_matching_use_new_t: True
+
+time_sampler:
+  type: mixture
+  min_t: ${interpolant.min_t}
+
+  three_sample: interval_length_first
+  alpha: 1.5
+  beta: 1.5
+  min_length: 0.01
+  bias_with_mixture: False
+
+min_t: 1e-2
+
+twisting:
+  use: False
+
+rots:
+  sample_schedule: linear
+  exp_rate: 10
+
+trans:
+  prior_type: gaussian
+  sample_schedule: linear
+  exp_rate: 10
+  align: True
+  noise_scale: 1.0
+
+sampling:
+  num_timesteps: 100
+  do_sde: False
+  last_step: True
+
+self_condition: false
+rotation_augmentation: True
+random_com_scale: 0.0

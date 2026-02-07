@@ -1,0 +1,53 @@
+
+# Path to the Lightning checkpoint that will be loaded at runtime.
+ckpt_path: "/network/scratch/m/marta.skreta/meanflows/IPA_best_models/IPA_best_model_M_L1/epoch_epoch=0999.ckpt"
+
+# Module to instantiate for inference. Supported values:
+#   - meanflow: MeanFlowModule
+#   - splitmf: SplitMeanFlowModule
+module_type: splitmf
+
+seed: 123
+
+# Base directory where samples will be written 
+# (default: ckpt_dir/epoch_{epoch}).
+output_dir: ./protein_generations/IPA_best_model_M_L1/motif_gen/2KL8
+
+n_steps: 50
+do_integration: false
+do_ddim: false
+
+# Reward guidance settings
+# Set do_reward_guidance to true to enable reward-guided sampling
+do_reward_guidance: true
+guidance_scale: 1000
+setting: rX1
+scale_grad_by_t: false
+
+# Reward function configuration
+reward_config:
+  reward_type: "motif_rmsd"  # reward_type: "secondary_struct" or "motif_rmsd" 
+  use_grad_safe: true      # Use gradient-safe versions to avoid NaN
+  target_pdb: protein_rewards/Scaffold-Lab/demo/motif_scaffolding/native_motifs/2KL8_motif.pdb
+  motif_position: "A1-7/20/A28-79"
+  atom_type: "backbone"
+
+
+self_condition: false
+save_trans_rot: false
+
+rot_schedule: constant
+rot_schedule_rate: 10.0
+
+samples:
+  min_length: 90
+  max_length: 90
+  length_step: 1
+  samples_per_length: 1
+  total_batches: 100
+
+ddim:
+  trans_gamma: 1.0
+  rot_gamma: 1.0
+  time_steps: uniform
+  last_step: true

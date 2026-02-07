@@ -1,0 +1,99 @@
+defaults:
+  - datasets
+  - model
+  - _self_
+
+data:
+
+  # Available tasks: hallucination, inpainting
+  task: hallucination
+  dataset: scope
+
+  loader:
+    num_workers: 4
+    prefetch_factor: 10
+
+  sampler:
+    # Setting for 48GB GPUs
+    max_batch_size: 80
+    max_num_res_squared: 100_000
+
+scope_dataset:
+  filter:
+    max_num_res: 70
+
+interpolant:
+  prior_type: uniform
+
+  time_sampler:
+    type: lognorm
+    mu: -0.4
+    sigma: 1.0
+    min_t: 1e-2
+
+    interval_sample: ordered
+    boundary_ratio: 0.75
+
+  min_t: 1e-2
+
+  twisting:
+    use: False
+
+  rots:
+    corrupt: True
+    sample_schedule: linear
+    exp_rate: 10
+
+  trans:
+    corrupt: True
+    batch_ot: True
+    sample_schedule: linear
+    sample_temp: 1.0
+    vpsde_bmin: 0.1
+    vpsde_bmax: 20.0
+    potential: null
+    potential_t_scaling: False
+    rog:
+      weight: 10.0
+      cutoff: 5.0
+
+  sampling:
+    num_timesteps: 100
+    do_sde: False
+
+  self_condition: false
+  use_inference_schedule: false
+
+experiment:
+  debug: False
+  seed: 123
+  num_devices: 1
+  warm_start: null
+  warm_start_cfg_override: True
+  training:
+    translation_loss_weight: 0.2
+    rotation_loss_weight: 1.0
+    loss_p: 0.5
+  wandb:
+    name: meanflow_${data.task}_${data.dataset}_debug
+    project: se3-MeanFlow-debug
+  optimizer:
+    lr: 0.0001
+  trainer:
+    overfit_batches: 10
+    min_epochs: 1 # prevents early stopping
+    max_epochs: 2000
+    accelerator: gpu
+    log_every_n_steps: 1
+    deterministic: True
+    strategy: ddp
+    check_val_every_n_epoch: 20
+    accumulate_grad_batches: 1
+  checkpointer:
+    dirpath: ckpt/${experiment.wandb.project}/${experiment.wandb.name}/${now:%Y-%m-%d}_${now:%H-%M-%S}
+    save_last: True
+    save_top_k: 3
+    monitor: valid/non_coil_percent
+    mode: max
+  # Keep this null. Will be populated at runtime.
+  inference_dir: null

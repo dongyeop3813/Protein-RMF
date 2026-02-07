@@ -1,0 +1,19 @@
+
+# Path to the Lightning checkpoint that will be loaded at runtime.
+ckpt_path: weights/pdb/published.ckpt
+
+seed: 123
+
+# Base directory where samples will be written.
+output_dir: ./inference_outputs
+name: null
+rot_schedule: linear
+num_timesteps: null
+
+samples:
+  min_length: 60
+  max_length: 128
+  length_step: 1
+  samples_per_length: 10
+
+self_condition: True

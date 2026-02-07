@@ -1,0 +1,26 @@
+# @package _global_
+
+defaults:
+  - datasets
+  - _self_
+
+scope_dataset:
+  overfit_use_len60_subset: True
+  overfit_len60_count: 2
+  overfit_repeat_count: 1800
+
+data:
+
+  # Available tasks: hallucination, inpainting
+  task: hallucination
+
+  # Available tasks: pdb, scope
+  dataset: scope_overfit_one
+
+  loader:
+    batch_size: 120
+
+  sampler:
+    # Setting for 48GB GPUs
+    max_batch_size: 80
+    max_num_res_squared: 100_000

@@ -1,0 +1,54 @@
+model:
+  num_blocks: 5
+  emb_dim: 128
+  cond_vel_parameterization: True
+
+interpolant:
+  sample_schedule: linear
+  exp_rate: 10
+
+time_sampler:
+  type: uniform
+  min_t: 1e-2
+  interval_sample: ordered
+  boundary_ratio: 0.75
+
+experiment:
+  loss_type: meanflow
+  debug: False
+  seed: 123
+  num_devices: 1
+  batch_size: 128
+
+  training:
+    semigroup_loss_on_velocity: True
+    semigroup_loss_weight: 4.0
+    flow_matching_loss_weight: 1.0
+
+  optimizer:
+    lr: 0.0001
+
+  trainer:
+    overfit_batches: 0
+    min_epochs: 1 # prevents early stopping
+    max_epochs: 10000
+    accelerator: gpu
+    log_every_n_steps: 1
+    # deterministic: True
+    strategy: auto
+    check_val_every_n_epoch: 20
+    accumulate_grad_batches: 1
+    gradient_clip_val: 1000.0
+
+  wandb:
+    name: ToySO3_MF
+    project: ToySO3
+
+  checkpointer:
+    dirpath: ckpt/${experiment.wandb.project}/${experiment.wandb.name}/${now:%Y-%m-%d}_${now:%H-%M-%S}
+    save_last: True
+    save_top_k: 3
+    monitor: valid/one_step_mmd2
+    mode: min
+  # Keep this null. Will be populated at runtime.
+  inference_dir: null

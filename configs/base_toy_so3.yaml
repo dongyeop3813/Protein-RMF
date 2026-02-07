@@ -1,0 +1,64 @@
+model:
+  num_blocks: 5
+  emb_dim: 128
+  cond_vel_parameterization: True
+
+interpolant:
+  sample_schedule: linear
+  exp_rate: 10
+
+sg_time_sampler:
+  three_sample: interval_length_first
+  alpha: 1.0
+  beta: 2.0
+
+fm_time_sampler:
+  type: uniform
+  min_t: 1e-2
+
+experiment:
+  loss_type: semigroup
+  debug: False
+  seed: 123
+  num_devices: 1
+  batch_size: 128
+
+  training:
+    semigroup_loss_on_velocity: True
+    semigroup_loss_weight: 4.0
+    flow_matching_loss_weight: 1.0
+    distillation: False
+    distillation_path: "ckpt/ToySO3/ToySO3_SMF/2025-11-14_22-54-15/last.ckpt"
+    v_flow_matching_loss: False
+    five_step_sg: False
+
+  optimizer:
+    lr: 0.0001
+
+  trainer:
+    overfit_batches: 0
+    min_epochs: 1 # prevents early stopping
+    max_epochs: 10000
+    accelerator: gpu
+    log_every_n_steps: 1
+    # deterministic: True
+    strategy: auto
+    check_val_every_n_epoch: 20
+    accumulate_grad_batches: 1
+    gradient_clip_val: 1000.0
+
+  use_ema: false
+  ema_decay: 0.999
+
+  wandb:
+    name: ToySO3_SMF
+    project: ToySO3
+
+  checkpointer:
+    dirpath: ckpt/${experiment.wandb.project}/${experiment.wandb.name}/${now:%Y-%m-%d}_${now:%H-%M-%S}
+    save_last: True
+    save_top_k: 3
+    monitor: valid/one_step_mmd2
+    mode: min
+  # Keep this null. Will be populated at runtime.
+  inference_dir: null

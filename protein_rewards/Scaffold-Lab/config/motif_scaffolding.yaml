@@ -1,0 +1,58 @@
+# Configuration for running self-consitency evaluation on motif-scaffolding task by running ProteinMPNN and ESMFold.
+defaults:
+  - override hydra/launcher: joblib
+
+inference:
+  name: motif-scaffolding
+  gpu_id: 0  # CUDA GPU to use
+  seed: 2
+
+  # Base path for generated files
+  experiment_name: reward_motif_A1to7_20_A28to79_backbone_nsteps_5_scale_10_rX1
+  #root_dir: /network/scratch/m/marta.skreta/meanflows/proteins/protein_generations/IPA_best_model_M_L1/20260202_motif/2KL8/guidance_onr1_bs1/${inference.experiment_name}/length_128
+  length: 80
+  root_dir: /network/scratch/m/marta.skreta/meanflows/proteins/protein_generations/IPA_best_model_M_L1/20260202_motif/2KL8/guidance_onr1_and_motif_bs1/${inference.experiment_name}/length_${inference.length}
+
+  # Directory of software, weights, and outputs.
+  backbone_pdb_dir: ${inference.root_dir}/scaffold_lab_pdbs
+  pmpnn_dir: ./tools/ProteinMPNN/
+  output_dir: ./outputs/2KL8/length_${inference.length}/${inference.experiment_name}_motifguidance
+  motif_csv_path: ${inference.root_dir}/motif_info.csv
+  motif_pdb: ./demo/motif_scaffolding/native_motifs/2KL8_motif.pdb
+  benchmark_set: None
+
+  # Setting of ProteinMPNN
+  CA_only: False
+  hide_GPU_from_pmpnn: True
+  force_motif_AA_type: False
+
+  samples:
+    # Max backbones to evaluate and incorporate into results
+    max_backbones: 10
+
+    # Number of ProteinMPNN sequences sampled per backbone.
+    seq_per_sample: 8
+    mpnn_batch_size: 8
+    sort_by_score: False
+
+  predict_method: [ESMFold]
+
+  af2:
+    executive_colabfold_path: path_to_your_localcolabfold
+    recycle: 3
+    seed: 33
+    model_type: alphafold2_ptm # {auto, alphafold2, alphafold2_multimer_{v1-v3}, deepfold_v1}
+    num_models: 1 # {1,2,3,4,5}
+    use_amber_relax: False
+    num_relax: 3
+    use_gpu_relax: False
+    rank: ptm # {auto, plddt, ptm, iptm, multimer}
+    remove_raw_outputs: True
+
+evaluation:
+  assist_protein: ./tools/assistant_protein/assist_protein.pdb
+  foldseek_path: None
+  foldseek_database: /network/scratch/m/marta.skreta/foldseek_pdb_db/pdb
+  foldseek_cores_for_pdbTM: 8
+  tmscore_threshold: 0.6 # `tmscore-threshold` parameter for Foldseek-Cluster
+  visualize: True
