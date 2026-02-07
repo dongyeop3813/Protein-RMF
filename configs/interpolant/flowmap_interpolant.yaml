@@ -6,7 +6,7 @@ time_sampler:
   type: mixture
   min_t: ${interpolant.min_t}
 
-  three_sample: interval_length_first
+  three_sample: interval_length_first_midpoint
   alpha: 1.5
   beta: 1.5
   min_length: 0.01

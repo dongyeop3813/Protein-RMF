@@ -8,8 +8,8 @@ defaults:
 experiment:
   num_devices: 4
   training:
-    loss_p: 0.0
-    semigroup_loss_on_velocity: True
+    loss_p: 0.5
+    semigroup_loss_on_velocity: False
     trans_scale: 0.1
     translation_loss_weight: 2.0
     rotation_loss_weight: 1.0
