@@ -1,4 +1,5 @@
-# Riemannian MeanFlow (Protein Backbone Experiments 🧬)
+# 🧬 Protein Frame RMF
+[![arXiv](https://img.shields.io/badge/arXiv-2602.07744-b31b1b.svg)](https://arxiv.org/abs/2602.07744)
 
 <img src="media/method.png" alt="Method" width="520" />
 
@@ -53,7 +54,7 @@ Expected layout (data loader expects `processed_scope/` at the root):
 
 ## ⬇️ Model weight downloads
 
-Pretrained RMF checkpoints are hosted on [Zenodo](https://zenodo.org/records/12776473). Download `weights.tar.gz`, then unpack it in the **repository root** so that a `weights/` directory is created:
+Pretrained RMF checkpoints are hosted on [Zenodo](https://zenodo.org/records/18582218). Download `weights.tar.gz`, then unpack it in the **repository root** so that a `weights/` directory is created:
 
 ```bash
 tar -xzvf weights.tar.gz
@@ -95,10 +96,13 @@ The same script supports reward-guided sampling. Enable it with `do_reward_guida
 If you use this code in your research, please cite:
 
 ```bibtex
-@article{riemannian_mean_flow,
-  title   = {Riemannian Mean Flow},
-  author  = {},
-  journal = {},
-  year    = {},
+@misc{woo2026riemannianmeanflow,
+      title={Riemannian MeanFlow}, 
+      author={Dongyeop Woo and Marta Skreta and Seonghyun Park and Sungsoo Ahn and Kirill Neklyudov},
+      year={2026},
+      eprint={2602.07744},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2602.07744}, 
 }
 ```
